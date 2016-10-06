@@ -1,11 +1,12 @@
 $( document ).ready(function(){
-  const w = 600;
+  const w = 900;
   const h = 600;
+  const radius = 3;
   const margin = {
-    top: 90,
-    bottom: 90,
-    left: 90,
-    right: 90
+    top: 5,
+    bottom: 10,
+    left: 10,
+    right: 10
   }
 
   function title(){
@@ -29,8 +30,8 @@ $( document ).ready(function(){
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
           }))
-        .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("charge", d3.forceManyBody().strength(-12))
+        .force("center", d3.forceCenter(width/2, height/2))
 
     let link = chart.append("g")
             .classed("links",true)
@@ -45,15 +46,15 @@ $( document ).ready(function(){
             .data(data.nodes)
             .enter()
               .append("circle")
-              .attr("r", 2.5)
+              .attr("r", radius - .9)
               .call(d3.drag()
               .on("start", dragstarted)
               .on("drag", dragged)
               .on("end", dragended)
               )
-              .on('mouseover',function(d,i){
-                console.log(d)
-              });
+              // .on('mouseover',function(d,i){
+              //   console.log(d)
+              // });
 
     node.append("title")
     .text(function(d) { return d.country; });
@@ -69,25 +70,17 @@ $( document ).ready(function(){
     //
     function ticked() {
         link
-            .attr("x1", function(d) {
-              return d.source.x;
-            })
-            .attr("y1", function(d) {
-              return d.source.y;
-            })
-            .attr("x2", function(d) {
-              return d.target.x;
-            })
-            .attr("y2", function(d) {
-              return d.target.y;
-            });
+            .attr("x1", function(d) {return d.source.x;})
+            .attr("y1", function(d) {return d.source.y;})
+            .attr("x2", function(d) {return d.target.x;})
+            .attr("y2", function(d) {return d.target.y;});
 
         node
             .attr("cx", function(d) {
-              return d.x;
+              return d.x = Math.max(radius, Math.min(width - radius, d.x));
              })
             .attr("cy", function(d) {
-              return d.y;
+              return d.y = Math.max(radius, Math.min(height - radius, d.y));
              });
       }
 
