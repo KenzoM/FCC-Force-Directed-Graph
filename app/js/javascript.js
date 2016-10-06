@@ -13,7 +13,7 @@ $( document ).ready(function(){
   function render(data){
 
     const width = w - (margin.left + margin.right);
-    const height = h - (margin.up + margin.down);
+    const height = h - (margin.top + margin.bottom);
 
     let svg = d3.select("#canvas")
                   .append("svg")
@@ -50,14 +50,17 @@ $( document ).ready(function(){
               .on("start", dragstarted)
               .on("drag", dragged)
               .on("end", dragended)
-              );
+              )
+              .on('mouseover',function(d,i){
+                console.log(d)
+              });
 
     node.append("title")
     .text(function(d) { return d.country; });
 
     simulation
         .nodes(data.nodes)
-        // .on("tick", ticked);
+        .on("tick", ticked);
 
     simulation.force("link")
         .links(data.links);
