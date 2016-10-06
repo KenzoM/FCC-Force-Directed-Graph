@@ -30,7 +30,8 @@ $( document ).ready(function(){
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
           }))
-        .force("charge", d3.forceManyBody().strength(-12))
+        .force("charge", d3.forceManyBody().strength(-4))
+        // .force("gravity", d3.forceManyBody().strength(-12))
         .force("center", d3.forceCenter(width/2, height/2))
 
     let link = chart.append("g")
@@ -46,7 +47,7 @@ $( document ).ready(function(){
             .data(data.nodes)
             .enter()
               .append("circle")
-              .attr("r", radius - .9)
+              .attr("r", 3)
               .call(d3.drag()
               .on("start", dragstarted)
               .on("drag", dragged)
