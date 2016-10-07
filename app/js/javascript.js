@@ -1,12 +1,14 @@
 $( document ).ready(function(){
   const w = 900;
-  const h = 600;
+  const h = 900;
   const margin = {
     top: 5,
     bottom: 10,
     left: 10,
     right: 10
   }
+
+  const radius = 6;
 
   function title(){
   }
@@ -32,7 +34,7 @@ $( document ).ready(function(){
     let simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
-          }))
+        }).distance(50))
         .force("charge", d3.forceManyBody().strength(-6))
         .force("center", d3.forceCenter(width/2, height/2))
 
@@ -44,9 +46,6 @@ $( document ).ready(function(){
             .enter()
               .append("line")
 
-    //
-    // node.append("title")
-    // .text(function(d) { return d.country; });
 
     simulation
         .nodes(data.nodes)
@@ -55,18 +54,43 @@ $( document ).ready(function(){
     simulation.force("link")
         .links(data.links);
 
+    let node = flagNodes.selectAll(".flag-nodes")
+            .data(data.nodes)
+            .enter()
+              .append("div")
+              .attr("class", function(d,i){
+                return `flag flag-${d.code}`
+              })
+              .call(d3.drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended)
+            )
+
+    node.append("title")
+    .text(function(d) { return d.country; });
+
+    d3.forceX(width)
+
     //functions provided by D3.js
     //
     function ticked() {
+
+        node
+            .style("left", function(d) {
+              let xlimit = Math.max(radius, Math.min(width - radius, d.x))
+              return xlimit + 'px'
+            })
+            .style("top", function(d) {
+              let ylimit = Math.max(radius, Math.min(height - radius, d.y))
+              return ylimit + 'px'
+            });
         link
             .attr("x1", function(d) {return d.source.x;})
             .attr("y1", function(d) {return d.source.y;})
             .attr("x2", function(d) {return d.target.x;})
             .attr("y2", function(d) {return d.target.y;});
 
-        node
-            .style("left", function(d) {return d.x + 'px'})
-            .style("top", function(d) {return d.y + 'px'});
       }
 
     function dragstarted(d) {
@@ -86,18 +110,6 @@ $( document ).ready(function(){
       d.fy = null;
     }
 
-    let node = flagNodes.selectAll(".flag-nodes")
-            .data(data.nodes)
-            .enter()
-              .append("div")
-              .attr("class", function(d,i){
-                return `flag flag-${d.code}`
-              })
-              .call(d3.drag()
-              .on("start", dragstarted)
-              .on("drag", dragged)
-              .on("end", dragended)
-            )
   }
   const url = 'https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json';
   $.ajax({
