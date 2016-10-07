@@ -1,11 +1,11 @@
 $( document ).ready(function(){
-  const w = 900;
-  const h = 900;
+  const w = 1100;
+  const h = 800;
   const margin = {
     top: 5,
-    bottom: 10,
-    left: 10,
-    right: 10
+    bottom: 5,
+    left: 5,
+    right: 5
   }
 
   const radius = 6;
@@ -37,9 +37,9 @@ $( document ).ready(function(){
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
         }))
-        .force("charge", d3.forceManyBody().strength(-9).distanceMax(80).distanceMin(20))
+        .force("charge", d3.forceManyBody().strength(1).distanceMax(90).distanceMin(20))
         .force("center", d3.forceCenter(width/2, height/2))
-        .force("collide", d3.forceCollide().radius(25))
+        .force("collide", d3.forceCollide().radius(27))
 
 
     let link = chart.append("g")
