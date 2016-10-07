@@ -6,7 +6,8 @@
     display: inline-block;
     width: 25px;
     height: 15px;
-    background: url('flags.png') no-repeat;
+    /*background: url(http://res.cloudinary.com/dyqqt0ksz/image/upload/v1470957015/flags_tu28r4.png) no-repeat;*/
+    background: url('flags.png')
 }
 
 

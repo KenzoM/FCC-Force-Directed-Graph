@@ -1,7 +1,6 @@
 $( document ).ready(function(){
   const w = 900;
   const h = 600;
-  const radius = 3;
   const margin = {
     top: 5,
     bottom: 10,
@@ -15,6 +14,10 @@ $( document ).ready(function(){
 
     const width = w - (margin.left + margin.right);
     const height = h - (margin.top + margin.bottom);
+
+    let flagNodes = d3.select("#canvas")
+                      .append("div")
+                      .classed("flag-nodes",true)
 
     let svg = d3.select("#canvas")
                   .append("svg")
@@ -30,9 +33,9 @@ $( document ).ready(function(){
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
           }))
-        .force("charge", d3.forceManyBody().strength(-4))
-        // .force("gravity", d3.forceManyBody().strength(-12))
+        .force("charge", d3.forceManyBody().strength(-6))
         .force("center", d3.forceCenter(width/2, height/2))
+
 
     let link = chart.append("g")
             .classed("links",true)
@@ -41,24 +44,9 @@ $( document ).ready(function(){
             .enter()
               .append("line")
 
-    let node = chart.append("g")
-            .classed("nodes",true)
-            .selectAll("circle")
-            .data(data.nodes)
-            .enter()
-              .append("circle")
-              .attr("r", 3)
-              .call(d3.drag()
-              .on("start", dragstarted)
-              .on("drag", dragged)
-              .on("end", dragended)
-              )
-              // .on('mouseover',function(d,i){
-              //   console.log(d)
-              // });
-
-    node.append("title")
-    .text(function(d) { return d.country; });
+    //
+    // node.append("title")
+    // .text(function(d) { return d.country; });
 
     simulation
         .nodes(data.nodes)
@@ -77,12 +65,8 @@ $( document ).ready(function(){
             .attr("y2", function(d) {return d.target.y;});
 
         node
-            .attr("cx", function(d) {
-              return d.x = Math.max(radius, Math.min(width - radius, d.x));
-             })
-            .attr("cy", function(d) {
-              return d.y = Math.max(radius, Math.min(height - radius, d.y));
-             });
+            .style("left", function(d) {return d.x + 'px'})
+            .style("top", function(d) {return d.y + 'px'});
       }
 
     function dragstarted(d) {
@@ -101,6 +85,19 @@ $( document ).ready(function(){
       d.fx = null;
       d.fy = null;
     }
+
+    let node = flagNodes.selectAll(".flag-nodes")
+            .data(data.nodes)
+            .enter()
+              .append("div")
+              .attr("class", function(d,i){
+                return `flag flag-${d.code}`
+              })
+              .call(d3.drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended)
+            )
   }
   const url = 'https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json';
   $.ajax({
