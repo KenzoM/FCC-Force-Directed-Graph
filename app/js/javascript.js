@@ -21,11 +21,13 @@ $( document ).ready(function(){
                       .append("div")
                       .classed("flag-nodes",true)
 
+
     let svg = d3.select("#canvas")
                   .append("svg")
                   .attr("id","chart")
                   .attr("width", w)
                   .attr("height", h)
+
 
     let chart = svg.append("g")
                     .classed("display", true)
@@ -34,9 +36,10 @@ $( document ).ready(function(){
     let simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
-        }).distance(50))
-        .force("charge", d3.forceManyBody().strength(-6))
+        }))
+        .force("charge", d3.forceManyBody().strength(-9).distanceMax(80).distanceMin(20))
         .force("center", d3.forceCenter(width/2, height/2))
+        .force("collide", d3.forceCollide().radius(25))
 
 
     let link = chart.append("g")
@@ -51,7 +54,8 @@ $( document ).ready(function(){
         .nodes(data.nodes)
         .on("tick", ticked);
 
-    simulation.force("link")
+    simulation
+        .force("link")
         .links(data.links);
 
     let node = flagNodes.selectAll(".flag-nodes")
@@ -75,7 +79,6 @@ $( document ).ready(function(){
     //functions provided by D3.js
     //
     function ticked() {
-
         node
             .style("left", function(d) {
               let xlimit = Math.max(radius, Math.min(width - radius, d.x))
@@ -86,11 +89,22 @@ $( document ).ready(function(){
               return ylimit + 'px'
             });
         link
-            .attr("x1", function(d) {return d.source.x;})
-            .attr("y1", function(d) {return d.source.y;})
-            .attr("x2", function(d) {return d.target.x;})
-            .attr("y2", function(d) {return d.target.y;});
-
+            .attr("x1", function(d) {
+              let x1 = Math.max(radius, Math.min(width - radius, d.source.x))
+              return x1;
+            })
+            .attr("y1", function(d) {
+              let y1 = Math.max(radius, Math.min(height - radius, d.source.y))
+              return y1
+            })
+            .attr("x2", function(d) {
+              let x2 = Math.max(radius, Math.min(width - radius, d.target.x))
+              return x2;
+            })
+            .attr("y2", function(d) {
+              let y2 = Math.max(radius, Math.min(height - radius, d.target.y))
+              return y2
+            });
       }
 
     function dragstarted(d) {
