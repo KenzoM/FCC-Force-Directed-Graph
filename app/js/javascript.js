@@ -11,6 +11,7 @@ $( document ).ready(function(){
   const radius = 9;
 
   function title(){
+    console.log('title')
   }
   function render(data){
     //adding tooltip
@@ -42,12 +43,9 @@ $( document ).ready(function(){
         .force("link", d3.forceLink().id(function(d,i) {
           return i;
         }))
-        .force("charge", d3.forceManyBody().strength(-60).distanceMax(50).distanceMin(5))
+        .force("charge", d3.forceManyBody().strength(-10).distanceMax(60).distanceMin(20))
         .force("center", d3.forceCenter(width/2, height/2))
-        .force("collide", d3.forceCollide().radius(35))
-        // .force("centering", d3.forceCenter(,height))
-        // .force("position", d3.forceX(0).strength(.01))
-        // .force("position", d3.forceY(-18))
+        .force("collision", d3.forceCollide().radius(22).strength(1))
 
 
     let link = chart.append("g")
@@ -79,7 +77,6 @@ $( document ).ready(function(){
               .on("end", dragended)
             )
             .on("mouseover",function(d,i){
-              // console.log(d.country)
               tooltip.transition()
                 .style("opacity", 0.8)
               tooltip.html(d.country)
@@ -93,10 +90,7 @@ $( document ).ready(function(){
 
     node.append("title")
     .text(function(d) { return d.country; });
-
-    d3.forceX(width)
-
-    //functions provided by D3.js
+    //functions provided by d3.js
     //
     function ticked() {
         node
@@ -155,6 +149,7 @@ $( document ).ready(function(){
     complete: () =>{
     },
     success: data =>{
+      title()
       render(data)
     },
     fail: () =>{
