@@ -9,10 +9,6 @@ $( document ).ready(function(){
   }
 
   const radius = 9;
-
-  function title(){
-    console.log('title')
-  }
   function render(data){
     //adding tooltip
     const tooltip = d3.select("#canvas")
@@ -149,7 +145,6 @@ $( document ).ready(function(){
     complete: () =>{
     },
     success: data =>{
-      title()
       render(data)
     },
     fail: () =>{

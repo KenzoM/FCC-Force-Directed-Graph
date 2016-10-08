@@ -1,9 +1,13 @@
 body,html{
-  // text-align: center;
+  font-family: 'Space Mono', monospace;
   background: #e2e2e2;
 }
 
-#canvas{;
+.title{
+  text-align: center;
+}
+
+#canvas{
   width: 1100px;
   height: 800px;
   margin: auto;
