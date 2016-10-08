@@ -13,6 +13,11 @@ $( document ).ready(function(){
   function title(){
   }
   function render(data){
+    //adding tooltip
+    const tooltip = d3.select("#canvas")
+                      .append("div")
+                      .classed("tooltip", true)
+                      .style("opacity", 0)
 
     const width = w - (margin.left + margin.right);
     const height = h - (margin.top + margin.bottom);
@@ -73,6 +78,18 @@ $( document ).ready(function(){
               .on("drag", dragged)
               .on("end", dragended)
             )
+            .on("mouseover",function(d,i){
+              // console.log(d.country)
+              tooltip.transition()
+                .style("opacity", 0.8)
+              tooltip.html(d.country)
+                .style("left", d3.event.pageX + "px")
+                .style("top", d3.event.pageY + "px")
+            })
+            .on("mouseout",function(d,i){
+              tooltip.transition()
+                .style("opacity", 0)
+            })
 
     node.append("title")
     .text(function(d) { return d.country; });
